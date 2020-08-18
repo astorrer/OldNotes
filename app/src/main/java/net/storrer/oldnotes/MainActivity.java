@@ -11,10 +11,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import net.storrer.oldnotes.adapter.NotesAdapter;
+import net.storrer.oldnotes.model.NoteEntity;
+import net.storrer.oldnotes.utilities.SampleData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+
+    private List<NoteEntity> notesData = new ArrayList<>();
+    private NotesAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +54,22 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        notesData.addAll(SampleData.getNotes());
+
+        for (NoteEntity note :
+             notesData) {
+           Log.i("Old Notes", note.toString());
+        }
     }
 
     private void initRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(layoutManager);
+
+        mAdapter = new NotesAdapter(notesData, this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
